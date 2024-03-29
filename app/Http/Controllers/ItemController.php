@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class ItemController extends Controller {
@@ -17,7 +18,7 @@ class ItemController extends Controller {
             'name'        => 'required|unique:items,name',
             'description' => 'required',
             'file'        => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'qty'    => 'required|integer|min:0',
+            'qty'         => 'required|integer|min:0',
         ]);
 
         if ($validator->fails()) {
@@ -42,16 +43,31 @@ class ItemController extends Controller {
         return response()->json($item, 201);
     }
 
+    public function show($inventoryId, $itemId) {
+        $item = Item::find($itemId);
+
+        if (!$item) {
+            return response()->json(['message' => 'Item not found'], 404);
+        }
+
+        if ($item->inventory->user_id !== auth()->id()) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        return response()->json($item);
+    }
+
     public function update(Request $request, $inventoryId, $itemId) {
+
         $validator = Validator::make($request->all(), [
             'name'        => 'required|unique:items,name',
             'description' => 'required',
-            'image'       => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'quantity'    => 'required|integer|min:0',
+            'file'        => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'qty'         => 'required|integer|min:0',
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json(['message' => $validator->errors()], 422);
         }
 
         $item = Item::find($itemId);
@@ -63,26 +79,27 @@ class ItemController extends Controller {
         $item->name        = $request->name;
         $item->description = $request->description;
 
-        if ($request->hasFile('image')) {
-            $image     = $request->file('image');
+        if ($request->hasFile('file')) {
+            $image     = $request->file('file');
             $imageName = time() . '_' . $image->getClientOriginalName();
             $image->storeAs('public/images', $imageName);
             $item->image = $imageName;
         }
 
-        $item->quantity = $request->quantity;
+        $item->quantity = $request->qty;
         $item->save();
 
         return response()->json($item, 200);
     }
 
-    public function destroy($itemId) {
+    public function destroy($inventory_id, $itemId) {
         $item = Item::find($itemId);
 
         if (!$item) {
             return response()->json(['message' => 'Item not found'], 404);
         }
 
+        Storage::delete('public/images/' . $item->image_name);
         $item->delete();
         return response()->json(['message' => 'Item deleted']);
     }

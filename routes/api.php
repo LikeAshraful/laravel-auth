@@ -13,5 +13,5 @@ Route::post('logout', [App\Http\Controllers\AuthController::class, 'logout']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::apiResource('inventories', App\Http\Controllers\InventoryController::class);
-    Route::apiResource('inventories.item', App\Http\Controllers\ItemController::class);
+    Route::apiResource('inventories.item', App\Http\Controllers\ItemController::class);    
 });
