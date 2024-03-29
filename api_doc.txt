@@ -1,0 +1,102 @@
+Authentication
+Register a new user
+
+Endpoint: POST /register
+Description: Register a new user.
+Request Body:
+name (string): Name of the user.
+email (string): Email address of the user.
+password (string): Password of the user.
+Response: Returns the newly registered user.
+Login
+
+Endpoint: POST /login
+Description: Authenticate a user and get an authentication token.
+Request Body:
+email (string): Email address of the user.
+password (string): Password of the user.
+Response: Returns an authentication token.
+Logout
+
+Endpoint: POST /logout
+Description: Invalidate the user's authentication token.
+Request Headers:
+Authorization: Bearer token obtained after login.
+Response: Returns a success message.
+Inventories
+List all Inventories
+
+Endpoint: GET /inventories
+Description: Get a list of all inventories.
+Authentication: Required
+Response: Returns a list of all inventories.
+Create a new Inventory
+
+Endpoint: POST /inventories
+Description: Create a new inventory.
+Authentication: Required
+Request Body:
+name (string): Name of the inventory.
+description (string): Description of the inventory.
+Response: Returns the newly created inventory.
+Retrieve an Inventory
+
+Endpoint: GET /inventories/{id}
+Description: Get details of a specific inventory.
+Authentication: Required
+Response: Returns details of the specified inventory.
+Update an Inventory
+
+Endpoint: PUT /inventories/{id}
+Description: Update an existing inventory.
+Authentication: Required
+Request Body:
+name (string): New name of the inventory (optional).
+description (string): New description of the inventory (optional).
+Response: Returns the updated inventory.
+Delete an Inventory
+
+Endpoint: DELETE /inventories/{id}
+Description: Delete an existing inventory.
+Authentication: Required
+Response: Returns a success message.
+Items
+List all Items in an Inventory
+
+Endpoint: GET /inventories/{inventoryId}/item
+Description: Get a list of all items in a specific inventory.
+Authentication: Required
+Response: Returns a list of all items in the specified inventory.
+Create a new Item in an Inventory
+
+Endpoint: POST /inventories/{inventoryId}/item
+Description: Add a new item to a specific inventory.
+Authentication: Required
+Request Body:
+name (string): Name of the item.
+description (string): Description of the item.
+file (file): Image file of the item.
+qty (integer): Quantity of the item.
+Response: Returns the newly created item.
+Retrieve an Item
+
+Endpoint: GET /inventories/{inventoryId}/item/{itemId}
+Description: Get details of a specific item in an inventory.
+Authentication: Required
+Response: Returns details of the specified item.
+Update an Item
+
+Endpoint: PUT /inventories/{inventoryId}/item/{itemId}
+Description: Update an existing item in an inventory.
+Authentication: Required
+Request Body:
+name (string): New name of the item (optional).
+description (string): New description of the item (optional).
+file (file): New image file of the item (optional).
+qty (integer): New quantity of the item (optional).
+Response: Returns the updated item.
+Delete an Item
+
+Endpoint: DELETE /inventories/{inventoryId}/item/{itemId}
+Description: Delete an existing item from an inventory.
+Authentication: Required
